@@ -1,4 +1,4 @@
-
+#!/bin/bash
 __version__="2.3.5"
 
 ## DEFAULT HOST & PORT
