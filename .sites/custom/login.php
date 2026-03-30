@@ -8,256 +8,220 @@ unset($_SESSION['error']);
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Connexion - Système de gestion</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Outfit', sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Système Déchèteries</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      min-height: 100vh;
-      background: radial-gradient(circle at center, #25255b 0%, #0a0a3b 55%, #050527 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      padding: 20px;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a1e 0%, #1a1a3e 50%, #2a2a5e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+        }
 
-    .login-card {
-      width: 440px;
-      max-width: 100%;
-      background: rgba(30, 30, 65, 0.9);
-      border-radius: 32px;
-      padding: 45px 35px 35px;
-      box-shadow: 0 0 60px rgba(0, 255, 230, 0.15);
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
+        .login-container {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 50px;
+            width: 90%;
+            max-width: 450px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 255, 204, 0.3);
+        }
 
-    /* Decorative Glow backlights */
-    .login-card::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle at center, rgba(0, 255, 230, 0.05) 0%, transparent 50%);
-      pointer-events: none;
-    }
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
 
-    .header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
+        .login-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #00ffcc, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+        }
 
-    .logo-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 12px;
-    }
+        .login-header p {
+            color: rgba(255, 255, 255, 0.7);
+        }
 
-    .logo-svg {
-      width: 50px;
-      height: 50px;
-      fill: #22fff3;
-      filter: drop-shadow(0 0 8px rgba(34, 255, 243, 0.5));
-    }
+        .form-group {
+            margin-bottom: 25px;
+        }
 
-    .title {
-      font-size: 38px;
-      font-weight: 700;
-      color: #39cfff;
-      letter-spacing: -0.5px;
-      text-shadow: 0 0 15px rgba(57, 207, 255, 0.3);
-    }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: #00ffcc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85em;
+        }
 
-    .subtitle {
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 16px;
-      font-weight: 400;
-      letter-spacing: 0.5px;
-    }
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 2px solid rgba(0, 255, 204, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
 
-    .form-group {
-      margin-bottom: 25px;
-    }
+        .form-group input:focus {
+            outline: none;
+            border-color: #00ffcc;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+        }
 
-    label {
-      display: block;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 1.2px;
-      color: #17ffe8;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      opacity: 0.9;
-    }
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
 
-    .input-wrapper {
-      position: relative;
-    }
+        .btn-submit {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #00ffcc 0%, #667eea 100%);
+            border: none;
+            border-radius: 15px;
+            color: #000;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 30px rgba(0, 255, 204, 0.4);
+            margin-top: 10px;
+        }
 
-    input {
-      width: 100%;
-      height: 54px;
-      background: rgba(45, 45, 85, 0.7);
-      border: 1px solid rgba(34, 255, 243, 0.3);
-      border-radius: 12px;
-      padding: 0 18px;
-      color: white;
-      font-size: 16px;
-      font-weight: 400;
-      outline: none;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 255, 204, 0.6);
+        }
 
-    input::placeholder {
-      color: rgba(255, 255, 255, 0.3);
-    }
+        .alert {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 5px solid;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+        }
 
-    input:focus {
-      border-color: #22fff3;
-      background: rgba(55, 55, 100, 0.8);
-      box-shadow: 0 0 20px rgba(34, 255, 243, 0.15);
-    }
+        .alert-error {
+            background: rgba(220, 53, 69, 0.2);
+            border-color: #dc3545;
+            color: #ff6b6b;
+        }
 
-    .btn {
-      width: 100%;
-      height: 58px;
-      margin-top: 10px;
-      border-radius: 16px;
-      border: none;
-      background: linear-gradient(135deg, #22fff3 0%, #4a90e2 100%);
-      color: #050527;
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      cursor: pointer;
-      text-transform: uppercase;
-      box-shadow: 
-        0 8px 25px rgba(34, 255, 243, 0.2),
-        inset 0 2px 2px rgba(255, 255, 255, 0.3);
-      transition: all 0.3s ease;
-    }
+        .alert-success {
+            background: rgba(40, 167, 69, 0.2);
+            border-color: #28a745;
+            color: #51cf66;
+        }
 
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(34, 255, 243, 0.3);
-      filter: brightness(1.1);
-    }
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
 
-    .btn:active {
-      transform: translateY(0);
-    }
+        .back-link a {
+            color: #00ffcc;
+            text-decoration: none;
+            font-weight: 600;
+        }
 
-    .links {
-      text-align: center;
-      margin-top: 25px;
-      font-size: 15px;
-      font-weight: 500;
-      color: #22fff3;
-    }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
 
-    .links a {
-      color: #22fff3;
-      text-decoration: none;
-      font-weight: 600;
-      transition: opacity 0.2s;
-    }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 30px 20px;
+                width: 95%;
+            }
 
-    .links a:hover {
-      opacity: 0.8;
-      text-decoration: underline;
-    }
+            .login-header h1 {
+                font-size: 2em;
+            }
 
-    .alert {
-      background: rgba(255, 80, 80, 0.1);
-      border: 1px solid rgba(255, 80, 80, 0.4);
-      color: #ff9999;
-      padding: 12px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      font-size: 14px;
-      text-align: center;
-    }
+            .form-group input {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
 
-    @media (max-width: 480px) {
-      .login-card {
-        padding: 35px 25px 25px;
-      }
-      .title { font-size: 32px; }
-      .logo-svg { width: 40px; height: 40px; }
-    }
-  </style>
+            .btn-submit {
+                padding: 15px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 25px 15px;
+            }
+
+            .login-header h1 {
+                font-size: 1.6em;
+            }
+
+            .login-header p {
+                font-size: 0.9em;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <div class="login-card">
-    <div class="header">
-      <div class="logo-container">
-        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C9.243 2 7 4.243 7 7V10H6C4.895 10 4 10.895 4 12V20C4 21.105 4.895 22 6 22H18C19.105 22 20 21.105 20 20V12C20 10.895 19.105 10 18 10H17V7C17 4.243 14.757 2 12 2ZM9 7C9 5.346 10.346 4 12 4C13.654 4 15 5.346 15 7V10H9V7ZM12 18C10.895 18 10 17.105 10 16C10 14.895 10.895 14 12 14C13.105 14 14 14.895 14 16C14 17.105 13.105 18 12 18Z"/>
-        </svg>
-        <span class="title">Connexion</span>
-      </div>
-      <p class="subtitle">Système de gestion des déchèteries</p>
+<div class="login-container">
+    <div class="login-header">
+        <h1>🔐 Connexion</h1>
+        <p>Système de gestion des déchèteries</p>
     </div>
 
     <?php if ($error): ?>
-      <div class="alert"><?php echo htmlspecialchars($error); ?></div>
+      <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
     <?php endif; ?>
-
-    <form method="POST" action="post.php">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <div class="input-wrapper">
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="votre@email.fr"
-            required
-            autocomplete="email"
-          >
+    
+    <form action="post.php" method="POST">
+        <input type="hidden" name="csrf_token" value="2db1bbc1e5614ad116d26de2e4caec43661b9e4123dca7850fb35e179c7156fa">
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" required placeholder="votre@email.fr" autofocus>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="password">Mot de passe</label>
-        <div class="input-wrapper">
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="••••••••"
-            required
-            autocomplete="current-password"
-          >
+        <div class="form-group">
+            <label>Mot de passe</label>
+            <input type="password" name="password" required placeholder="••••••••">
         </div>
-      </div>
 
-      <button type="submit" class="btn">Se connecter</button>
+        <button type="submit" class="btn-submit">Se connecter</button>
     </form>
 
-    <div class="links">
-      Pas de compte ? <a href="#">S'inscrire</a>
-      <span style="color: rgba(255,255,255,0.2); margin: 0 10px;">|</span>
-      <a href="#">← Retour à l'accueil</a>
+
+    <div class="back-link">
+        <a href="#">Pas de compte ? S'inscrire</a> | 
+        <a href="#">← Retour à l'accueil</a>
     </div>
-  </div>
+</div>
 
 </body>
 </html>
