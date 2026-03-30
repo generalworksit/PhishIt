@@ -10,13 +10,16 @@ unset($_SESSION['error']);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Connexion</title>
+  <title>Connexion - Système de gestion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: 'Outfit', sans-serif;
     }
 
     body {
@@ -26,150 +29,177 @@ unset($_SESSION['error']);
       justify-content: center;
       align-items: center;
       color: white;
+      padding: 20px;
     }
 
     .login-card {
-      width: 455px;
-      max-width: 92%;
-      background: rgba(36, 36, 78, 0.95);
-      border-radius: 26px;
-      padding: 40px 38px 34px;
-      box-shadow:
-        0 0 40px rgba(0, 255, 255, 0.12),
-        0 0 90px rgba(0, 255, 255, 0.14);
-      border: 1px solid rgba(0, 255, 255, 0.08);
+      width: 440px;
+      max-width: 100%;
+      background: rgba(30, 30, 65, 0.9);
+      border-radius: 32px;
+      padding: 45px 35px 35px;
+      box-shadow: 0 0 60px rgba(0, 255, 230, 0.15);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Decorative Glow backlights */
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(0, 255, 230, 0.05) 0%, transparent 50%);
+      pointer-events: none;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 34px;
+      margin-bottom: 40px;
     }
 
-    .logo-row {
+    .logo-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 8px;
+      gap: 15px;
+      margin-bottom: 12px;
     }
 
-    .logo {
-      font-size: 44px;
-      color: #22e5dc;
+    .logo-svg {
+      width: 50px;
+      height: 50px;
+      fill: #22fff3;
+      filter: drop-shadow(0 0 8px rgba(34, 255, 243, 0.5));
     }
 
     .title {
-      font-size: 42px;
+      font-size: 38px;
       font-weight: 700;
       color: #39cfff;
-      line-height: 1;
+      letter-spacing: -0.5px;
+      text-shadow: 0 0 15px rgba(57, 207, 255, 0.3);
     }
 
     .subtitle {
-      color: rgba(255,255,255,0.75);
-      font-size: 17px;
-      margin-top: 10px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
     }
 
     .form-group {
-      margin-bottom: 24px;
+      margin-bottom: 25px;
     }
 
     label {
       display: block;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
-      letter-spacing: 1.6px;
+      letter-spacing: 1.2px;
       color: #17ffe8;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .input-wrapper {
+      position: relative;
     }
 
     input {
       width: 100%;
-      height: 52px;
-      border-radius: 14px;
-      border: 2px solid rgba(0, 255, 255, 0.45);
-      background: rgba(58, 58, 108, 0.65);
+      height: 54px;
+      background: rgba(45, 45, 85, 0.7);
+      border: 1px solid rgba(34, 255, 243, 0.3);
+      border-radius: 12px;
+      padding: 0 18px;
       color: white;
-      padding: 0 20px;
-      font-size: 18px;
+      font-size: 16px;
+      font-weight: 400;
       outline: none;
-      transition: 0.25s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     input::placeholder {
-      color: rgba(255,255,255,0.45);
+      color: rgba(255, 255, 255, 0.3);
     }
 
     input:focus {
       border-color: #22fff3;
-      box-shadow: 0 0 18px rgba(34, 255, 243, 0.18);
+      background: rgba(55, 55, 100, 0.8);
+      box-shadow: 0 0 20px rgba(34, 255, 243, 0.15);
     }
 
     .btn {
       width: 100%;
-      height: 56px;
-      border: none;
-      border-radius: 16px;
-      background: linear-gradient(90deg, #1ee7d8 0%, #5c88f4 100%);
-      color: #000;
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      cursor: pointer;
+      height: 58px;
       margin-top: 10px;
-      box-shadow:
-        0 0 20px rgba(44, 255, 246, 0.25),
-        0 0 35px rgba(44, 255, 246, 0.18);
-      transition: transform 0.2s ease, opacity 0.2s ease;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #22fff3 0%, #4a90e2 100%);
+      color: #050527;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      cursor: pointer;
       text-transform: uppercase;
+      box-shadow: 
+        0 8px 25px rgba(34, 255, 243, 0.2),
+        inset 0 2px 2px rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
     }
 
     .btn:hover {
-      transform: translateY(-1px);
-      opacity: 0.96;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(34, 255, 243, 0.3);
+      filter: brightness(1.1);
+    }
+
+    .btn:active {
+      transform: translateY(0);
     }
 
     .links {
       text-align: center;
-      margin-top: 18px;
-      font-size: 16px;
-      font-weight: 700;
-      color: #12ffe8;
+      margin-top: 25px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #22fff3;
     }
 
     .links a {
-      color: #12ffe8;
+      color: #22fff3;
       text-decoration: none;
+      font-weight: 600;
+      transition: opacity 0.2s;
     }
 
     .links a:hover {
+      opacity: 0.8;
       text-decoration: underline;
     }
 
     .alert {
-      background: rgba(255, 70, 70, 0.15);
-      border: 1px solid rgba(255, 70, 70, 0.35);
-      color: #ffd2d2;
-      padding: 12px 14px;
-      border-radius: 12px;
-      margin-bottom: 18px;
+      background: rgba(255, 80, 80, 0.1);
+      border: 1px solid rgba(255, 80, 80, 0.4);
+      color: #ff9999;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 20px;
       font-size: 14px;
+      text-align: center;
     }
 
-    @media (max-width: 520px) {
+    @media (max-width: 480px) {
       .login-card {
-        padding: 30px 22px 26px;
+        padding: 35px 25px 25px;
       }
-
-      .title {
-        font-size: 34px;
-      }
-
-      .subtitle {
-        font-size: 15px;
-      }
+      .title { font-size: 32px; }
+      .logo-svg { width: 40px; height: 40px; }
     }
   </style>
 </head>
@@ -177,11 +207,13 @@ unset($_SESSION['error']);
 
   <div class="login-card">
     <div class="header">
-      <div class="logo-row">
-        <div class="logo">🔐</div>
-        <div class="title">Connexion</div>
+      <div class="logo-container">
+        <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C9.243 2 7 4.243 7 7V10H6C4.895 10 4 10.895 4 12V20C4 21.105 4.895 22 6 22H18C19.105 22 20 21.105 20 20V12C20 10.895 19.105 10 18 10H17V7C17 4.243 14.757 2 12 2ZM9 7C9 5.346 10.346 4 12 4C13.654 4 15 5.346 15 7V10H9V7ZM12 18C10.895 18 10 17.105 10 16C10 14.895 10.895 14 12 14C13.105 14 14 14.895 14 16C14 17.105 13.105 18 12 18Z"/>
+        </svg>
+        <span class="title">Connexion</span>
       </div>
-      <div class="subtitle">Système de gestion des déchèteries</div>
+      <p class="subtitle">Système de gestion des déchèteries</p>
     </div>
 
     <?php if ($error): ?>
@@ -191,24 +223,30 @@ unset($_SESSION['error']);
     <form method="POST" action="post.php">
       <div class="form-group">
         <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="votre@email.fr"
-          required
-        >
+        <div class="input-wrapper">
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="votre@email.fr"
+            required
+            autocomplete="email"
+          >
+        </div>
       </div>
 
       <div class="form-group">
         <label for="password">Mot de passe</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="••••••••"
-          required
-        >
+        <div class="input-wrapper">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="••••••••"
+            required
+            autocomplete="current-password"
+          >
+        </div>
       </div>
 
       <button type="submit" class="btn">Se connecter</button>
@@ -216,7 +254,7 @@ unset($_SESSION['error']);
 
     <div class="links">
       Pas de compte ? <a href="#">S'inscrire</a>
-      &nbsp;|&nbsp;
+      <span style="color: rgba(255,255,255,0.2); margin: 0 10px;">|</span>
       <a href="#">← Retour à l'accueil</a>
     </div>
   </div>
